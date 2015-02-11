@@ -1,19 +1,21 @@
 var Module = require('module');
 var _ = require('lodash');
+var path = require('path');
 
-module.exports = function generateRequireForUserCode(userCodeDirs, forExtensions) {
-  forExtensions = forExtensions || Object.keys(require.extensions);
+module.exports = function generateRequireForUserCode(scopedDirs) {
+  var forExtensions = Object.keys(require.extensions);
+  scopedDirs = _.map(scopedDirs, function(dir) {return path.resolve(dir)});
 
   var baseModule = require('./lib/stubmodule-that-does-the-require');
   // so that it can be re-used again with another scoped-dir, I delete it from the cache
   delete Module._cache[baseModule.id];
 
   function inUserCodeDirs(modulePath) {
-    return _.some(userCodeDirs, function(userCodeDir) {return modulePath.indexOf(userCodeDir) >= 0});
+    return _.some(scopedDirs, function(userCodeDir) {return modulePath.indexOf(userCodeDir) >= 0});
   }
 
   function removePathsNotInUserCodeDirs(m) {
-    m.paths = _.filter(m.paths.concat(userCodeDirs), function(modulePath) { return inUserCodeDirs(modulePath); });
+    m.paths = _.filter(m.paths.concat(scopedDirs), function(modulePath) { return inUserCodeDirs(modulePath); });
   }
 
   removePathsNotInUserCodeDirs(baseModule);

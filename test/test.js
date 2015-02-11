@@ -12,6 +12,13 @@ describe('scoped-require node module', function () {
     assert.strictEqual(scopedModule.scopedFunction(), 'scopedString');
   });
 
+  it('must support relative dirs', function () {
+    var baseModule = scopedRequire(['./test/scoped-dir']);
+    var scopedModule = baseModule.require('scoped-module');
+
+    assert.strictEqual(scopedModule.scopedFunction(), 'scopedString');
+  });
+
   it('must enable a module in a scoped dir to also be scoped to that dir', function() {
     var baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir')]);
 
