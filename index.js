@@ -1,6 +1,7 @@
 var Module = require('module');
 var _ = require('lodash');
 var path = require('path');
+var vm = require('vm');
 
 module.exports = function generateRequireForUserCode(scopedDirs) {
   var forExtensions = Object.keys(require.extensions);
@@ -36,7 +37,6 @@ module.exports = function generateRequireForUserCode(scopedDirs) {
 
   return {
     require: baseModule.require.bind(baseModule),
-    module: baseModule,
     clearCache: function () {
       function deleteModuleFromCache(m) {
         delete Module._cache[m.id];
@@ -45,6 +45,15 @@ module.exports = function generateRequireForUserCode(scopedDirs) {
         });
       }
       deleteModuleFromCache(baseModule);
+    },
+    loadCodeAsModule: function(code, filename) {
+      var module = new Module(filename, baseModule);
+      module.filename = filename;
+      module.paths = baseModule.paths;
+
+      module._compile(code, module.filename);
+
+      return module.exports;
     }
   }
 };

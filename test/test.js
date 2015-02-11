@@ -115,4 +115,14 @@ it('must enable more than one scoped dir in a base module', function() {
 
     assert.strictEqual(global.moduleLoadSideEffect, 3);
   });
+
+  it("must enable evaluation of code in the context of the required scope", function() {
+    var baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir')]);
+    var moduleExports = baseModule.loadCodeAsModule("exports.result = require('scoped-module').scopedFunction()");
+
+    assert.strictEqual(moduleExports.result, 'scopedString');
+
+  })
 });
+
+

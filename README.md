@@ -49,8 +49,10 @@ The parameters are:
 * `scopedDirs`: an array of directories (full or relative paths. If relative, they are relative to cwd).
 These directories are the search path - any scoped require will search these directories, in the order they were given.
 
-Returns an object with two fields:
+Returns an object with the following method:
 * `require`: use this require to require any module which is in one of the `scopedDirs`
+* `loadCodeAsModule(content, filename)`: use this as an alternative to require, to load code that is dynamic.
+the `filename` is to make the errrors make sense.
 * `clearCache`: a method, that if called, will clear the module cache of all the modules
 already loaded from the `scopedDirs`. require-ing them again will reload them.
 
