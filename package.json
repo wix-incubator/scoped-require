@@ -1,0 +1,33 @@
+{
+  "name": "scoped-require",
+  "version": "0.0.0",
+  "description": "Require that is scoped to directories",
+  "homepage": "https://github.com/wix/scoped-require",
+  "author": {
+    "name": "Gil Tayar",
+    "email": ""
+  },
+  "repository": "giltayar/scoped-require",
+  "license": "MIT",
+  "main": "index.js",
+  "keywords": [
+    "scoped-require",
+    "require",
+    "user-code"
+  ],
+  "dependencies": {
+    "lodash": "^3.1.0"
+  },
+  "devDependencies": {
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-nodeunit": "^0.4.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "load-grunt-tasks": "^1.0.0",
+    "time-grunt": "^1.0.0",
+    "grunt-mocha-cli": "^1.11.0",
+    "jshint-stylish": "^1.0.0"
+  },
+  "scripts": {
+    "test": "grunt"
+  }
+}
