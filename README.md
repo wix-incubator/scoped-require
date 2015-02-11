@@ -28,7 +28,7 @@ MIT © [Wix]()
 
 [npm-url]: https://npmjs.org/package/scoped-require
 [npm-image]: https://badge.fury.io/js/scoped-require.svg
-[travis-url]: https://travis-ci.org/giltayar/scoped-require
-[travis-image]: https://travis-ci.org/giltayar/scoped-require.svg?branch=master
+[travis-url]: https://travis-ci.org/wix/scoped-require
+[travis-image]: https://travis-ci.org/wix/scoped-require.svg?branch=master
 [daviddm-url]: https://david-dm.org/giltayar/scoped-require.svg?theme=shields.io
 [daviddm-image]: https://david-dm.org/giltayar/scoped-require
