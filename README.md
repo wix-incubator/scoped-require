@@ -30,5 +30,5 @@ MIT © [Wix]()
 [npm-image]: https://badge.fury.io/js/scoped-require.svg
 [travis-url]: https://travis-ci.org/wix/scoped-require
 [travis-image]: https://travis-ci.org/wix/scoped-require.svg?branch=master
-[daviddm-url]: https://david-dm.org/giltayar/scoped-require.svg?theme=shields.io
-[daviddm-image]: https://david-dm.org/giltayar/scoped-require
+[daviddm-url]: https://david-dm.org/wix/scoped-require.svg?theme=shields.io
+[daviddm-image]: https://david-dm.org/wix/scoped-require
