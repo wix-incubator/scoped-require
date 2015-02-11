@@ -1,7 +1,16 @@
 #  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-url]][daviddm-image]
 
-> Require that is scoped to directories
+## What is scoped-require?
 
+scoped-require enables you to designate a directory as a "firewalled" directory - requires from this base directory
+will be firewalled into that directory and will not be allowed to escape.
+This means that require-ing a module external to that directory will fail.
+
+Why would anyone use it? For user-code, that you want to run under your node program, but don't want them
+to use your modules and your code.
+
+The module also enables you to re-import everything under that folder, to enable a use-case where the user
+changes something in the module and wants to reload it, without restarting your application.
 
 ## Install
 
@@ -13,13 +22,37 @@ $ npm install --save scoped-require
 ## Usage
 
 ```js
-var scoped-require = require('scoped-require');
+var scopedRequire = require('scoped-require');
 
-var baseModule = scoped-require(['dir-with-module']);
+var baseModule = scopedRequire(['dir-with-module']);
 
 var aModule = baseModule.require('a-module');
+
+// use module...
+
+baseModule.clearCache();
+
+// reload module
+aModule = baseModule.require('a-module');
+
 ```
 
+## Reference API
+```js
+var scopedRequire = require('scoped-require');
+```
+
+The module exposes a factory returning a base module -
+
+### `scopedRequire(scopedDirs, /*optional*/forExtensions)`:
+The parameters are:
+* `scopedDirs`: an array of directories (full or relative paths. If relative, they are relative to cwd).
+These directories are the search path - any scoped require will search these directories, in the order they were given.
+
+Returns an object with two fields:
+* `require`: use this require to require any module which is in one of the `scopedDirs`
+* `clearCache`: a method, that if called, will clear the module cache of all the modules
+already loaded from the `scopedDirs`. require-ing them again will reload them.
 
 ## License
 
