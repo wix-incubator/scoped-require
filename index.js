@@ -37,6 +37,7 @@ module.exports = function generateRequireForUserCode(scopedDirs) {
 
   return {
     require: baseModule.require.bind(baseModule),
+    scopedDirs: scopedDirs,
     clearCache: function () {
       function deleteModuleFromCache(m) {
         delete Module._cache[m.id];

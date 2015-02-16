@@ -121,8 +121,15 @@ it('must enable more than one scoped dir in a base module', function() {
     var moduleExports = baseModule.loadCodeAsModule("exports.result = require('scoped-module').scopedFunction()");
 
     assert.strictEqual(moduleExports.result, 'scopedString');
-
   })
+
+  it("must return the scopedDirs it received", function() {
+    var baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir')]);
+
+    assert.deepEqual(baseModule.scopedDirs, [path.resolve(__dirname, 'scoped-dir')]);
+  })
+
+
 });
 
 

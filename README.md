@@ -52,6 +52,7 @@ These directories are the search path - any scoped require will search these dir
 Returns an object with the following method:
 * `require`: use this require to require any module which is in one of the `scopedDirs`
 * `loadCodeAsModule(content, filename)`: use this as an alternative to require, to load code that is dynamic.
+* `scopedDirs`: same array passed as an argument. If the dirs were relative, then this array will contain the absolute paths.
 the `filename` is to make the errrors make sense.
 * `clearCache`: a method, that if called, will clear the module cache of all the modules
 already loaded from the `scopedDirs`. require-ing them again will reload them.
