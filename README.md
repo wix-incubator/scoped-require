@@ -37,6 +37,10 @@ aModule = baseModule.require('a-module');
 
 ```
 
+Note thate creating the "scoped require" needs to be done after any other hooks to require,
+e.g. Traceur, babel, and others. This is because other hooks may not execute the original hook,
+but will rather override them.
+
 ## Reference API
 ```js
 var scopedRequire = require('scoped-require');

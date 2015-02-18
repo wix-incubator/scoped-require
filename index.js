@@ -22,18 +22,18 @@ module.exports = function generateRequireForUserCode(scopedDirs) {
   removePathsNotInUserCodeDirs(baseModule);
 
   _.forEach(forExtensions, function(ext) {
-      var original = require.extensions[ext];
-      if (original && original.__dontExtendThisScopedRequire)
-        return;
+    var original = require.extensions[ext];
+    if (original && original.__dontExtendThisScopedRequire)
+      return;
 
-      require.extensions[ext] = function requireThatAddsUserCodeDirs(m, filename) {
-        if (inUserCodeDirs(m.filename))
-          removePathsNotInUserCodeDirs(m);
+    require.extensions[ext] = function requireThatAddsUserCodeDirs(m, filename) {
+      if (inUserCodeDirs(m.filename))
+        removePathsNotInUserCodeDirs(m);
 
-        return original(m, filename);
-      };
-      Object.defineProperty(require.extensions[ext], "__dontExtendThisScopedRequire", {value: true});
-    });
+      return original(m, filename);
+    };
+    Object.defineProperty(require.extensions[ext], "__dontExtendThisScopedRequire", {value: true});
+  });
 
   return {
     require: baseModule.require.bind(baseModule),
