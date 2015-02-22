@@ -24,35 +24,38 @@ describe('scoped-require node module', function () {
 
     var scopedModule = baseModule.require('scoped-module-that-imports');
 
-    assert.strictEqual(scopedModule.aFunction(), 'astring and substring')
+    assert.strictEqual(scopedModule.aFunction(), 'astring and substring and substring2')
   });
+
   it('must enable a module in a scoped dir to use relative dir module loading', function() {
     var baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir')]);
 
     var scopedModule = baseModule.require('scoped-module-that-imports-relatively');
 
-  assert.strictEqual(scopedModule.aFunction(), 'astring and substring')
-});
+    assert.strictEqual(scopedModule.aFunction(), 'astring and substring and substring2')
+  });
 
-it('must enable more than one scoped baseModule', function() {
-  var baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir')]);
-  var baseModule2 = scopedRequire([path.resolve(__dirname, 'scoped-dir-2')]);
+  it('must enable more than one scoped baseModule', function() {
+    var baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir')]);
+    var baseModule2 = scopedRequire([path.resolve(__dirname, 'scoped-dir-2')]);
 
-  var scopedModule = baseModule.require('scoped-module');
-  var scopedModule2 = baseModule2.require('scoped-module-2');
+    var scopedModule = baseModule.require('scoped-module');
+    var scopedModule2 = baseModule2.require('scoped-module-2');
 
-  assert.strictEqual(scopedModule.scopedFunction(), 'scopedString');
-  assert.strictEqual(scopedModule2.scopedFunction2(),  'scopedString2');
-});
+    assert.strictEqual(scopedModule.scopedFunction(), 'scopedString');
+    assert.strictEqual(scopedModule2.scopedFunction2(),  'scopedString2');
+  });
 
-it('must enable more than one scoped dir in a base module', function() {
+  it('must enable more than one scoped dir in a base module', function() {
     var baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir'), path.resolve(__dirname, 'scoped-dir-2')]);
 
     var scopedModule = baseModule.require('scoped-module');
     var scopedModule2 = baseModule.require('scoped-module-2');
+    var scopedModule3 = baseModule.require('module-importing-module-importing-from-scope2');
 
     assert.strictEqual(scopedModule.scopedFunction(), 'scopedString');
     assert.strictEqual(scopedModule2.scopedFunction2(), 'scopedString2');
+    assert.strictEqual(scopedModule3(), '1 and 2 and scopedString2');
   });
 
   it('must not enable scoped modules to use node modules from outside its scope', function() {

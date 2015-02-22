@@ -1,10 +1,10 @@
 var Module = require('module');
 var _ = require('lodash');
 var path = require('path');
-var vm = require('vm');
 
 module.exports = function generateRequireForUserCode(scopedDirs) {
   var forExtensions = Object.keys(require.extensions);
+  var uniqueIdForThisScopedRequire = _.uniqueId("__dontExtendThisScopedRequire");
   scopedDirs = _.map(scopedDirs, function(dir) {return path.resolve(dir)});
 
   var baseModule = require('./lib/stubmodule-that-does-the-require');
@@ -23,7 +23,7 @@ module.exports = function generateRequireForUserCode(scopedDirs) {
 
   _.forEach(forExtensions, function(ext) {
     var original = require.extensions[ext];
-    if (original && original.__dontExtendThisScopedRequire)
+    if (original && original[uniqueIdForThisScopedRequire])
       return;
 
     require.extensions[ext] = function requireThatAddsUserCodeDirs(m, filename) {
@@ -32,7 +32,7 @@ module.exports = function generateRequireForUserCode(scopedDirs) {
 
       return original(m, filename);
     };
-    Object.defineProperty(require.extensions[ext], "__dontExtendThisScopedRequire", {value: true});
+    Object.defineProperty(require.extensions[ext], uniqueIdForThisScopedRequire, {value: true});
   });
 
   return {
