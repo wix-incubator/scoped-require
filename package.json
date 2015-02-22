@@ -7,7 +7,7 @@
     "name": "Gil Tayar",
     "email": ""
   },
-  "repository": "giltayar/scoped-require",
+  "repository": "https://github.com/wix/scoped-require",
   "license": "MIT",
   "main": "index.js",
   "keywords": [
