@@ -15,11 +15,11 @@ module.exports = function generateRequireForUserCode(scopedDirs) {
     return _.some(scopedDirs, function(userCodeDir) {return modulePath.indexOf(userCodeDir) >= 0});
   }
 
-  function removePathsNotInUserCodeDirs(m) {
+  function adjustPaths(m) {
     m.paths = _.filter(m.paths.concat(scopedDirs), function(modulePath) { return inUserCodeDirs(modulePath); });
   }
 
-  removePathsNotInUserCodeDirs(baseModule);
+  adjustPaths(baseModule);
 
   _.forEach(forExtensions, function(ext) {
     var original = require.extensions[ext];
@@ -28,7 +28,7 @@ module.exports = function generateRequireForUserCode(scopedDirs) {
 
     require.extensions[ext] = function requireThatAddsUserCodeDirs(m, filename) {
       if (inUserCodeDirs(m.filename))
-        removePathsNotInUserCodeDirs(m);
+        adjustPaths(m);
 
       return original(m, filename);
     };
