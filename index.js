@@ -1,8 +1,11 @@
+"use strict";
 var Module = require('module');
 var _ = require('lodash');
 var path = require('path');
 
-module.exports = function generateRequireForUserCode(scopedDirs) {
+module.exports = function generateRequireForUserCode(scopedDirs, options) {
+  options = _.defaults((options || {}), {autoDeleteCache: false});
+
   var forExtensions = Object.keys(require.extensions);
   var uniqueIdForThisScopedRequire = _.uniqueId("__dontExtendThisScopedRequire");
   scopedDirs = _.map(scopedDirs, function(dir) {return path.resolve(dir)});
@@ -35,16 +38,26 @@ module.exports = function generateRequireForUserCode(scopedDirs) {
     Object.defineProperty(require.extensions[ext], uniqueIdForThisScopedRequire, {value: true});
   });
 
+  function deleteModuleFromCache(m) {
+    delete Module._cache[m.id];
+    _.forEach(m.children, function (subModule) {
+      deleteModuleFromCache(subModule);
+    });
+    m.children = [];
+  }
+
   return {
-    require: baseModule.require.bind(baseModule),
+    require: !options.autoDeleteCache ?
+      baseModule.require.bind(baseModule) :
+      function(path) {
+        var moduleExports = baseModule.require.apply(baseModule, arguments);
+
+        deleteModuleFromCache(baseModule);
+
+        return moduleExports;
+      },
     scopedDirs: scopedDirs,
     clearCache: function () {
-      function deleteModuleFromCache(m) {
-        delete Module._cache[m.id];
-        _.forEach(m.children, function (subModule) {
-          deleteModuleFromCache(subModule);
-        });
-      }
       deleteModuleFromCache(baseModule);
     },
     loadCodeAsModule: function(code, filename) {

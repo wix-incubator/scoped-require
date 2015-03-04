@@ -11,6 +11,8 @@ to use your modules and your code.
 
 The module also enables you to re-import everything under that folder, to enable a use-case where the user
 changes something in the module and wants to reload it, without restarting your application.
+This can be done automatically, on every require, so that you can `require` the user code, and the user can edit it
+while knowing that her change will automatically be reloaded next time you `require`.
 
 ## Install
 
@@ -48,10 +50,13 @@ var scopedRequire = require('scoped-require');
 
 The module exposes a factory returning a base module -
 
-### `scopedRequire(scopedDirs, /*optional*/forExtensions)`:
+### `scopedRequire(scopedDirs, /*optional*/options)`:
 The parameters are:
 * `scopedDirs`: an array of directories (full or relative paths. If relative, they are relative to cwd).
 These directories are the search path - any scoped require will search these directories, in the order they were given.
+* `options`: an object with the following (optional) fields.
+  * `autoDeleteCache`: every time `require` (see below) is called, it will also delete the cache, so that the
+  next time `require` is called, the module will reload. Default: false.
 
 Returns an object with the following method:
 * `require`: use this require to require any module which is in one of the `scopedDirs`

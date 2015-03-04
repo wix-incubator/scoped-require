@@ -119,6 +119,22 @@ describe('scoped-require node module', function () {
     assert.strictEqual(global.moduleLoadSideEffect, 3);
   });
 
+  it('auto-deleting modules from cache', function() {
+    global.moduleLoadSideEffect = 1;
+    var baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir')], {autoDeleteCache: true});
+    baseModule.require('module-whose-load-side-effects-2');
+
+    assert.strictEqual(global.moduleLoadSideEffect, 2);
+
+    baseModule.require('module-whose-load-side-effects-2');
+
+    assert.strictEqual(global.moduleLoadSideEffect, 3);
+
+    baseModule.require('module-whose-load-side-effects-2');
+
+    assert.strictEqual(global.moduleLoadSideEffect, 4);
+  });
+
   it("must enable evaluation of code in the context of the required scope", function() {
     var baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir')]);
     var moduleExports = baseModule.loadCodeAsModule("exports.result = require('scoped-module').scopedFunction()");
