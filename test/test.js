@@ -145,37 +145,37 @@ describe('scoped-require node module', function () {
   it("must cache evaluated code if given filename", function() {
     var baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir')]);
 
-    var codeWithSideEffect = "global.moduleLoadSideEffect3 = (global.moduleLoadSideEffect3 || 0) + 1;";
-    var codeWithSideEffect2 = "global.moduleLoadSideEffect3 = (global.moduleLoadSideEffect3 || 0) + 2;";
+    var codeWithSideEffect = "global.moduleLoadSideEffect3 = (global.moduleLoadSideEffect3 || 0) + 1; require('module-whose-load-side-effects-3');";
+    var codeWithSideEffect2 = "global.moduleLoadSideEffect3 = (global.moduleLoadSideEffect3 || 0) + 2; require('module-whose-load-side-effects-3');";
 
     baseModule.loadCodeAsModule(codeWithSideEffect, "foo/bar.js");
 
-    assert.strictEqual(global.moduleLoadSideEffect3, 1);
+    assert.strictEqual(global.moduleLoadSideEffect3, 2);
 
     baseModule.loadCodeAsModule(codeWithSideEffect2, "foo/bar.js");
 
-    assert.strictEqual(global.moduleLoadSideEffect3, 1);
+    assert.strictEqual(global.moduleLoadSideEffect3, 2);
 
     baseModule.clearCache();
 
     baseModule.loadCodeAsModule(codeWithSideEffect2, "foo/bar.js");
 
-    assert.strictEqual(global.moduleLoadSideEffect3, 3);
+    assert.strictEqual(global.moduleLoadSideEffect3, 5);
   });
 
   it("must not cache evaluated code if autoDeleteCache", function() {
     var baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir')], {autoDeleteCache: true});
 
-    var codeWithSideEffect = "global.moduleLoadSideEffect4 = (global.moduleLoadSideEffect4 || 0) + 1;";
-    var codeWithSideEffect2 = "global.moduleLoadSideEffect4 = (global.moduleLoadSideEffect4 || 0) + 2;";
+    var codeWithSideEffect = "global.moduleLoadSideEffect4 = (global.moduleLoadSideEffect4 || 0) + 1; require('module-whose-load-side-effects-4');";
+    var codeWithSideEffect2 = "global.moduleLoadSideEffect4 = (global.moduleLoadSideEffect4 || 0) + 2; require('module-whose-load-side-effects-4');";
 
     baseModule.loadCodeAsModule(codeWithSideEffect, "footang/bar.js");
 
-    assert.strictEqual(global.moduleLoadSideEffect4, 1);
+    assert.strictEqual(global.moduleLoadSideEffect4, 2);
 
     baseModule.loadCodeAsModule(codeWithSideEffect2, "footang/bar.js");
 
-    assert.strictEqual(global.moduleLoadSideEffect4, 3);
+    assert.strictEqual(global.moduleLoadSideEffect4, 5);
   });
 
   it("must return the scopedDirs it received", function() {

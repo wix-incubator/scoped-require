@@ -71,8 +71,11 @@ module.exports = function generateRequireForUserCode(scopedDirs, options) {
       module._compile(code, module.filename);
 
       baseModule.children.push(module);
-      if (filename && !options.autoDeleteCache)
+      if (options.autoDeleteCache)
+        deleteModuleFromCache(baseModule);
+      else if (filename && !options.autoDeleteCache)
         Module._cache[filename] = module;
+
 
       return module.exports;
     }
