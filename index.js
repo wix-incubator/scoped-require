@@ -70,7 +70,7 @@ module.exports = function generateRequireForUserCode(scopedDirs, options) {
       module.filename = filename;
       module.paths = baseModule.paths;
 
-      module._compile(code, module.filename);
+      module._compile(code, module.filename || "filename-to-make-node6-happy");
 
       baseModule.children.push(module);
       if (options.autoDeleteCache)
