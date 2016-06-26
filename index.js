@@ -15,6 +15,7 @@ module.exports = function generateRequireForUserCode(scopedDirs, options) {
   delete Module._cache[baseModule.id];
   // make relative paths work when requiring
   baseModule.filename = path.resolve(scopedDirs[0], 'stubmodule-that-does-the-require.js');
+  baseModule.__scopedRequireModule = true
 
   function inUserCodeDirs(modulePath) {
     return _.some(scopedDirs, function(userCodeDir) {return modulePath.indexOf(userCodeDir) >= 0});
@@ -32,8 +33,11 @@ module.exports = function generateRequireForUserCode(scopedDirs, options) {
       return;
 
     require.extensions[ext] = function requireThatAddsUserCodeDirs(m, filename) {
-      if (inUserCodeDirs(m.filename))
+      if ((!m.parent && inUserCodeDirs(m.filename)) ||
+        m.parent && m.parent.__scopedRequireModule && inUserCodeDirs(m.filename)) {
+        m.__scopedRequireModule = true;
         adjustPaths(m);
+      }
 
       return original(m, filename);
     };
