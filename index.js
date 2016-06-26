@@ -13,6 +13,8 @@ module.exports = function generateRequireForUserCode(scopedDirs, options) {
   var baseModule = require('./lib/stubmodule-that-does-the-require');
   // so that it can be re-used again with another scoped-dir, I delete it from the cache
   delete Module._cache[baseModule.id];
+  // make relative paths work when requiring
+  baseModule.filename = path.resolve(scopedDirs[0], 'stubmodule-that-does-the-require.js');
 
   function inUserCodeDirs(modulePath) {
     return _.some(scopedDirs, function(userCodeDir) {return modulePath.indexOf(userCodeDir) >= 0});

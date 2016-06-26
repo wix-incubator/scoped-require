@@ -7,9 +7,6 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     mochacli: {
-      options: {
-        bail: true
-      },
       all: ['test/*.js']
     },
     watch: {
