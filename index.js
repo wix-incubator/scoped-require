@@ -15,7 +15,7 @@ module.exports = function generateRequireForUserCode(scopedDirs, options) {
   delete Module._cache[baseModule.id];
   // make relative paths work when requiring
   baseModule.filename = path.resolve(scopedDirs[0], 'stubmodule-that-does-the-require.js');
-  baseModule.__scopedRequireModule = true
+  baseModule.__scopedRequireModule = true;
 
   function inUserCodeDirs(modulePath) {
     return _.some(scopedDirs, function(userCodeDir) {return modulePath.indexOf(userCodeDir) >= 0});
@@ -73,6 +73,7 @@ module.exports = function generateRequireForUserCode(scopedDirs, options) {
       var module = new Module(filename, baseModule);
       module.filename = filename;
       module.paths = baseModule.paths;
+      module.__scopedRequireModule = true;
 
       module._compile(code, module.filename || "filename-to-make-node6-happy");
 
