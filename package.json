@@ -16,18 +16,21 @@
     "user-code"
   ],
   "dependencies": {
-    "lodash": "^3.1.0"
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
-    "grunt-cli": "^0.1.13",
-    "grunt-contrib-nodeunit": "^0.4.1",
-    "grunt-contrib-watch": "^0.6.1",
-    "load-grunt-tasks": "^3.1.0",
-    "time-grunt": "^1.0.0",
-    "grunt-mocha-cli": "^1.11.0",
-    "jshint-stylish": "^1.0.0"
+    "eslint": "^4.12.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "mocha": "^4.0.1",
+    "mocha-env-reporter": "^3.0.0"
   },
   "scripts": {
-    "test": "grunt"
+    "test": "mocha --reporter mocha-env-reporter 'test/test.js'",
+    "posttest": "npm run lint",
+    "lint": "eslint index.js lib test"
   }
 }

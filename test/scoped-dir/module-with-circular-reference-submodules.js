@@ -1,1 +1,1 @@
-module.exports.submodule = require('afolder/circular-ref-1');
+module.exports.submodule = require('afolder/circular-ref-1')
