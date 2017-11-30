@@ -1,1 +1,1 @@
-global.moduleLoadSideEffect3++;
+global.moduleLoadSideEffect3++

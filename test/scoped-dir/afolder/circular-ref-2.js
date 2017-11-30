@@ -1,2 +1,2 @@
-require('./circular-ref-1');
-global.moduleLoadSideEffect++;
+require('./circular-ref-1')
+global.moduleLoadSideEffect++

@@ -1,3 +1,3 @@
-module.exports = function subfunction() {
-  return "substring2";
-};
+module.exports = function subfunction () {
+  return 'substring2'
+}

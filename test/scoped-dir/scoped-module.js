@@ -1,5 +1,5 @@
 const scopedString = require('anNpmModule')
 
-exports.scopedFunction = function() {
-  return scopedString;
+exports.scopedFunction = function () {
+  return scopedString
 }

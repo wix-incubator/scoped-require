@@ -1,1 +1,1 @@
-require('./circular-ref-2');
+require('./circular-ref-2')

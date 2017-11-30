@@ -1,0 +1,7 @@
+{
+  "extends": "standard",
+  "rules": {
+    "node/no-deprecated-api": "off",
+    "no-var": "error"
+  }
+}
