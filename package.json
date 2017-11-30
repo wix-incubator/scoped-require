@@ -1,6 +1,6 @@
 {
   "name": "scoped-require",
-  "version": "2.1.2",
+  "version": "3.0.0",
   "description": "Require that is scoped to directories",
   "homepage": "https://github.com/wix/scoped-require",
   "author": {
@@ -29,6 +29,7 @@
     "mocha-env-reporter": "^3.0.0"
   },
   "scripts": {
+    "clean": "rm -rf node_modules",
     "test": "mocha --reporter mocha-env-reporter 'test/test.js'",
     "posttest": "npm run lint",
     "lint": "eslint index.js lib test"

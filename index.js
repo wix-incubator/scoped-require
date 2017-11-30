@@ -45,10 +45,11 @@ module.exports = function generateRequireForUserCode (scopedDirs, options) {
 
   function deleteModuleFromCache (m) {
     delete Module._cache[m.id]
-    _.forEach(m.children, function (subModule) {
+    const moduleChildren = m.children
+    m.children = []
+    _.forEach(moduleChildren, function (subModule) {
       deleteModuleFromCache(subModule)
     })
-    m.children = []
   }
 
   return {
