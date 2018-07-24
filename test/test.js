@@ -119,6 +119,8 @@ describe('scoped-require node module', function () {
     const hello1 = baseModule.require('native-hello-world')
 
     assert.strictEqual(hello1(), 'Hello, world!')
+
+    assert.strictEqual(hello, hello1)
   })
 
   it('deleting scoped-dir cache that includes circular-reference modules', function () {
