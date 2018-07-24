@@ -108,6 +108,19 @@ describe('scoped-require node module', function () {
     assert.strictEqual(global.moduleLoadSideEffect, 3)
   })
 
+  it('ignore native modules when clearing cache', function () {
+    const baseModule = scopedRequire([path.resolve(__dirname, '../')])
+    const hello = baseModule.require('native-hello-world')
+
+    assert.strictEqual(hello(), 'Hello, world!')
+
+    baseModule.clearCache()
+
+    const hello1 = baseModule.require('native-hello-world')
+
+    assert.strictEqual(hello1(), 'Hello, world!')
+  })
+
   it('deleting scoped-dir cache that includes circular-reference modules', function () {
     global.moduleLoadSideEffect = 1
     const baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir')])

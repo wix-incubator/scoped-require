@@ -44,6 +44,10 @@ module.exports = function generateRequireForUserCode (scopedDirs, options) {
   })
 
   function deleteModuleFromCache (m) {
+    if (m.id.endsWith('.node')) {
+      m.parent = null
+      return
+    }
     delete Module._cache[m.id]
     const moduleChildren = m.children
     m.children = []
