@@ -16,7 +16,8 @@
     "user-code"
   ],
   "dependencies": {
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "snyk": "^1.317.0"
   },
   "devDependencies": {
     "eslint": "^4.12.1",
@@ -33,6 +34,9 @@
     "clean": "rm -rf node_modules",
     "test": "mocha --reporter mocha-env-reporter 'test/test.js'",
     "posttest": "npm run lint",
-    "lint": "eslint index.js lib test"
-  }
+    "lint": "eslint index.js lib test",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
