@@ -6,8 +6,6 @@ const path = require('path')
 module.exports = function generateRequireForUserCode (scopedDirs, options) {
   options = _.defaults((options || {}), {autoDeleteCache: false})
 
-  const forExtensions = Object.keys(require.extensions)
-  const uniqueIdForThisScopedRequire = _.uniqueId('__dontExtendThisScopedRequire')
   scopedDirs = _.map(scopedDirs, function (dir) { return path.resolve(dir) })
 
   const baseModule = require('./lib/stubmodule-that-does-the-require')
@@ -15,32 +13,21 @@ module.exports = function generateRequireForUserCode (scopedDirs, options) {
   delete Module._cache[baseModule.id]
   // make relative paths work when requiring
   baseModule.filename = path.resolve(scopedDirs[0], 'stubmodule-that-does-the-require.js')
-  baseModule.__scopedRequireModule = true
 
-  function inUserCodeDirs (modulePath) {
-    return _.some(scopedDirs, function (userCodeDir) { return modulePath.indexOf(userCodeDir) >= 0 })
+  function addPaths (m) {
+    m.paths = m.paths.concat(scopedDirs)
   }
 
-  function adjustPaths (m) {
-    m.paths = _.filter(m.paths.concat(scopedDirs), function (modulePath) { return inUserCodeDirs(modulePath) })
-  }
+  addPaths(baseModule)
 
-  adjustPaths(baseModule)
+  _.forEach(require.extensions, function (extensionFunc, extension) {
+    const original = extensionFunc
 
-  _.forEach(forExtensions, function (ext) {
-    const original = require.extensions[ext]
-    if (original && original[uniqueIdForThisScopedRequire]) { return }
-
-    require.extensions[ext] = function requireThatAddsUserCodeDirs (m, filename) {
-      if (((!m.parent && inUserCodeDirs(m.filename)) ||
-        (m.parent && m.parent.__scopedRequireModule)) && inUserCodeDirs(m.filename)) {
-        m.__scopedRequireModule = true
-        adjustPaths(m)
-      }
+    require.extensions[extension] = function requireThatAddsUserCodeDirs (m, filename) {
+      addPaths(m)
 
       return original(m, filename)
     }
-    Object.defineProperty(require.extensions[ext], uniqueIdForThisScopedRequire, {value: true})
   })
 
   function deleteModuleFromCache (m) {
@@ -76,7 +63,6 @@ module.exports = function generateRequireForUserCode (scopedDirs, options) {
       const module = new Module(filename, baseModule)
       module.filename = filename
       module.paths = baseModule.paths
-      module.__scopedRequireModule = true
 
       module._compile(code, module.filename || 'filename-to-make-node6-happy')
 

@@ -12,6 +12,13 @@ describe('scoped-require node module', function () {
     assert.strictEqual(scopedModule.scopedFunction(), 'scopedString')
   })
 
+  it('must support requiring a scoped dir from a non-scoped dir', function () {
+    const baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir')])
+    const unscopedModule = baseModule.require(path.resolve(__dirname, 'unscoped-dir/unscoped-module'))
+
+    assert.strictEqual(unscopedModule.scopedFunction(), 'scopedString')
+  })
+
   it('must support relative dirs', function () {
     const baseModule = scopedRequire(['./test/scoped-dir'])
     const scopedModule = baseModule.require('scoped-module')
@@ -63,13 +70,6 @@ describe('scoped-require node module', function () {
     assert.strictEqual(scopedModule.scopedFunction(), 'scopedString')
     assert.strictEqual(scopedModule2.scopedFunction2(), 'scopedString2')
     assert.strictEqual(scopedModule3(), '1 and 2 and scopedString2')
-  })
-
-  it('must not enable scoped modules to use node modules from outside its scope', function () {
-    const baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir')])
-    assert.throws(function () {
-      baseModule.require('scoped-module-that-uses-lodash')
-    })
   })
 
   it('must allow deleting the scoped dir cache', function () {
