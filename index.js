@@ -15,7 +15,7 @@ module.exports = function generateRequireForUserCode (scopedDirs, options) {
   baseModule.filename = path.resolve(scopedDirs[0], 'stubmodule-that-does-the-require.js')
 
   function addPaths (m) {
-    m.paths = m.paths.concat(scopedDirs)
+    m.paths = [...scopedDirs, ...m.paths]
   }
 
   addPaths(baseModule)
