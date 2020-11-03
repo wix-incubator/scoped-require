@@ -15,13 +15,13 @@ module.exports = function generateRequireForUserCode (scopedDirs, options) {
   baseModule.filename = path.resolve(scopedDirs[0], 'stubmodule-that-does-the-require.js')
 
   function addPaths (m) {
-    m.paths = [...scopedDirs, ...m.paths]
+    m.paths = _.uniq([...scopedDirs, ...m.paths])
   }
 
   addPaths(baseModule)
 
-  _.forEach(require.extensions, function (extensionFunc, extension) {
-    const original = extensionFunc
+  _.forEach(require.extensions, function (extensionLoader, extension) {
+    const original = extensionLoader
 
     require.extensions[extension] = function requireThatAddsUserCodeDirs (m, filename) {
       addPaths(m)
