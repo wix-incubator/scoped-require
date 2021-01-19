@@ -3,3 +3,4 @@ npm-debug.log
 .idea
 *.iml
 package-lock.json
+!test/scoped-dir-3/**/node_modules
