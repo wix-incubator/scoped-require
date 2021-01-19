@@ -205,4 +205,12 @@ describe('scoped-require node module', function () {
 
     assert.deepEqual(baseModule.scopedDirs, [path.resolve(__dirname, 'scoped-dir')])
   })
+
+  it('favors original node paths over scoped paths', () => {
+    const baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir-3'), path.resolve(__dirname, 'scoped-dir-3', 'node_modules')])
+
+    const scopedModule = baseModule.require('module1')
+
+    assert.strictEqual(scopedModule, 'dep1 from scoped-dir-3/module1/node_modules folder')
+  })
 })
