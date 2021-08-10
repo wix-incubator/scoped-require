@@ -213,4 +213,11 @@ describe('scoped-require node module', function () {
 
     assert.strictEqual(scopedModule, 'dep1 from scoped-dir-3/module1/node_modules folder')
   })
+
+  it('must include and use last required module', function () {
+    const baseModule = scopedRequire([path.resolve(__dirname, 'dir1', path.resolve(__dirname, 'dir2'))])
+
+    const scopedModule = baseModule.require('scoped-test-module')
+    assert.strictEqual(scopedModule.scopedFunction(), 'scoped dir 2')
+  })
 })
