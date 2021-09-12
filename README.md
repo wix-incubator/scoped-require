@@ -63,8 +63,9 @@ Returns an object with the following method:
 * `loadCodeAsModule(content, filename)`: use this as an alternative to require, to load code that is dynamic.
 * `scopedDirs`: same array passed as an argument. If the dirs were relative, then this array will contain the absolute paths.
 the `filename` is to make the errrors make sense.
-* `clearCache`: a method, that if called, will clear the module cache of all the modules
+* `clearCache(directoriesToClear)`: a method, that if called, will clear the module cache of all the modules
 already loaded from the `scopedDirs`. require-ing them again will reload them.
+Accepts an optional `directoriesToClear` array of strings argument. If given, `clearCache` will only clear modules inside the given directories from the cache.
 
 ## License
 
