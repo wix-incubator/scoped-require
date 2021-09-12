@@ -26,7 +26,7 @@ $ npm install --save scoped-require
 ```js
 var scopedRequire = require('scoped-require');
 
-var baseModule = scopedRequire(['dir-with-module']);
+var baseModule = scopedRequire([{ path: 'dir-with-module' }]);
 
 var aModule = baseModule.require('a-module');
 
@@ -39,7 +39,7 @@ aModule = baseModule.require('a-module');
 
 ```
 
-Note thate creating the "scoped require" needs to be done after any other hooks to require,
+Note that creating the "scoped require" needs to be done after any other hooks to require,
 e.g. Traceur, babel, and others. This is because other hooks may not execute the original hook,
 but will rather override them.
 
@@ -52,8 +52,11 @@ The module exposes a factory returning a base module -
 
 ### `scopedRequire(scopedDirs, /*optional*/options)`:
 The parameters are:
-* `scopedDirs`: an array of directories (full or relative paths. If relative, they are relative to cwd).
+* `scopedDirs`: an array of objects representing the directories.
 These directories are the search path - any scoped require will search these directories, in the order they were given.
+Each directory is an object containing the following fields:
+  * `path` (required): the path of the directory (full or relative path. If relative, it is relative to cwd)
+  * `skipCacheDelete` (optional, default `false`): whether or not to skip deleting cache for modules inside this directory when `clearCache` is called.
 * `options`: an object with the following (optional) fields.
   * `autoDeleteCache`: every time `require` (see below) is called, it will also delete the cache, so that the
   next time `require` is called, the module will reload. Default: false.
@@ -61,7 +64,7 @@ These directories are the search path - any scoped require will search these dir
 Returns an object with the following method:
 * `require`: use this require to require any module which is in one of the `scopedDirs`
 * `loadCodeAsModule(content, filename)`: use this as an alternative to require, to load code that is dynamic.
-* `scopedDirs`: same array passed as an argument. If the dirs were relative, then this array will contain the absolute paths.
+* `scopedDirs`: The directory paths passed as an argument. If the paths were relative, then this array will contain the absolute paths.
 the `filename` is to make the errrors make sense.
 * `clearCache`: a method, that if called, will clear the module cache of all the modules
 already loaded from the `scopedDirs`. require-ing them again will reload them.
