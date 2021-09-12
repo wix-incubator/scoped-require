@@ -30,11 +30,35 @@ module.exports = function generateRequireForUserCode (scopedDirs, options) {
     }
   })
 
+  function isSubDir (parent, directoryPath) {
+    const relative = path.relative(parent, directoryPath)
+    return relative && !relative.startsWith('..') && !path.isAbsolute(relative)
+  }
+
+  function shouldSkipCacheDelete (directoryPath) {
+    const isParentDirectoryRequiringCacheDeletion = _.some(scopedDirs, (scopedDir) =>
+      isSubDir(scopedDir.path, directoryPath) && scopedDir.skipCacheDelete !== true
+    )
+
+    if (isParentDirectoryRequiringCacheDeletion) {
+      return false
+    }
+
+    return _.some(scopedDirs, (scopedDir) =>
+      isSubDir(scopedDir.path, directoryPath) && scopedDir.skipCacheDelete === true
+    )
+  }
+
   function deleteModuleFromCache (m) {
     if (m && m.id && m.id.endsWith('.node')) {
       m.parent = null
       return
     }
+
+    if (shouldSkipCacheDelete(m.id)) {
+      return
+    }
+
     delete Module._cache[m.id]
     const moduleChildren = m.children
     m.children = []

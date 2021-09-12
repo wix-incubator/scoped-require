@@ -141,6 +141,34 @@ describe('scoped-require node module', function () {
     assert.strictEqual(global.moduleLoadSideEffect, 3)
   })
 
+  it('does not delete from cache when "skipCacheDelete" flag is true', function () {
+    global.moduleLoadSideEffect5 = 1
+    const baseModule = scopedRequire([{path: path.resolve(__dirname, 'scoped-dir'), skipCacheDelete: true}])
+    baseModule.require('module-whose-load-side-effects-5')
+
+    assert.strictEqual(global.moduleLoadSideEffect5, 2)
+
+    baseModule.clearCache()
+
+    baseModule.require('module-whose-load-side-effects-5')
+
+    assert.strictEqual(global.moduleLoadSideEffect5, 2)
+  })
+
+  it('when 2 scoped dirs share a child and one of those doesn\'t have the "skipCacheDelete" flag - delete the cache', function () {
+    global.moduleLoadSideEffect6 = 1
+    const baseModule = scopedRequire([{path: path.resolve(__dirname, 'scoped-dir', 'a-nested-scoped-dir'), skipCacheDelete: true}, {path: path.resolve(__dirname, 'scoped-dir')}])
+    baseModule.require('module-whose-load-side-effects-6')
+
+    assert.strictEqual(global.moduleLoadSideEffect6, 2)
+
+    baseModule.clearCache()
+
+    baseModule.require('module-whose-load-side-effects-6')
+
+    assert.strictEqual(global.moduleLoadSideEffect6, 3)
+  })
+
   it('auto-deleting modules from cache', function () {
     global.moduleLoadSideEffect = 1
     const baseModule = scopedRequire([{path: path.resolve(__dirname, 'scoped-dir')}], {autoDeleteCache: true})
