@@ -32,7 +32,7 @@ module.exports = function generateRequireForUserCode (scopedDirs, options) {
 
   function isSubPath (parent, modulePath) {
     const relative = path.relative(parent, modulePath)
-    return relative && !relative.startsWith('..') && !path.isAbsolute(relative)
+    return relative && !relative.startsWith('..')
   }
 
   function shouldDeleteFromCache (modulePath, directoriesToClear) {
