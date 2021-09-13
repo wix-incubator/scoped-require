@@ -46,7 +46,7 @@ module.exports = function generateRequireForUserCode (scopedDirs, options) {
   function deleteModuleFromCache (m, directoriesToClear) {
     if (m && m.id && m.id.endsWith('.node')) {
       m.parent = null
-      return
+      return false
     }
 
     if (!shouldDeleteFromCache(m.id, directoriesToClear)) {
