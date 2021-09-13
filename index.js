@@ -36,7 +36,7 @@ module.exports = function generateRequireForUserCode (scopedDirs, options) {
   }
 
   function shouldDeleteFromCache (modulePath, directoriesToClear) {
-    if (_.isEmpty(directoriesToClear) || modulePath === baseModule.id) {
+    if ((directoriesToClear === undefined) || modulePath === baseModule.id) {
       return true
     }
 
