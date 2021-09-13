@@ -1,0 +1,1 @@
+global.moduleScopedDir2LoadSideEffect++

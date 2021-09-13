@@ -30,16 +30,34 @@ module.exports = function generateRequireForUserCode (scopedDirs, options) {
     }
   })
 
-  function deleteModuleFromCache (m) {
+  function isSubPath (parent, modulePath) {
+    const relative = path.relative(parent, modulePath)
+    return relative && !relative.startsWith('..')
+  }
+
+  function shouldDeleteFromCache (modulePath, directoriesToClear) {
+    if ((directoriesToClear === undefined) || modulePath === baseModule.id) {
+      return true
+    }
+
+    return _.some(directoriesToClear, (directoryToClear) => isSubPath(directoryToClear, modulePath))
+  }
+
+  function deleteModuleFromCache (m, directoriesToClear) {
     if (m && m.id && m.id.endsWith('.node')) {
       m.parent = null
-      return
+      return false
     }
+
+    if (!shouldDeleteFromCache(m.id, directoriesToClear)) {
+      return false
+    }
+
     delete Module._cache[m.id]
     const moduleChildren = m.children
     m.children = []
     _.forEach(moduleChildren, function (subModule) {
-      deleteModuleFromCache(subModule)
+      deleteModuleFromCache(subModule, directoriesToClear)
     })
   }
 
@@ -54,8 +72,8 @@ module.exports = function generateRequireForUserCode (scopedDirs, options) {
         return moduleExports
       },
     scopedDirs: scopedDirs,
-    clearCache: function () {
-      deleteModuleFromCache(baseModule)
+    clearCache: function (directoriesToClear) {
+      deleteModuleFromCache(baseModule, directoriesToClear)
     },
     loadCodeAsModule: function (code, filename) {
       if (filename && Module._cache[filename]) { return Module._cache[filename] }

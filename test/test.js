@@ -141,6 +141,26 @@ describe('scoped-require node module', function () {
     assert.strictEqual(global.moduleLoadSideEffect, 3)
   })
 
+  it('clearCache deleting from cache only modules inside the given directoriesToClear, if given any', function () {
+    global.moduleLoadSideEffect5 = 1
+    global.moduleScopedDir2LoadSideEffect = 1
+
+    const baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir'), path.resolve(__dirname, 'scoped-dir-2')])
+    baseModule.require('module-in-scoped-dir-2-whose-load-side-effects')
+    baseModule.require('module-whose-load-side-effects-5')
+
+    assert.strictEqual(global.moduleScopedDir2LoadSideEffect, 2)
+    assert.strictEqual(global.moduleLoadSideEffect5, 2)
+
+    baseModule.clearCache([path.resolve(__dirname, 'scoped-dir-2')])
+
+    baseModule.require('module-in-scoped-dir-2-whose-load-side-effects')
+    baseModule.require('module-whose-load-side-effects-5')
+
+    assert.strictEqual(global.moduleScopedDir2LoadSideEffect, 3)
+    assert.strictEqual(global.moduleLoadSideEffect5, 2)
+  })
+
   it('auto-deleting modules from cache', function () {
     global.moduleLoadSideEffect = 1
     const baseModule = scopedRequire([path.resolve(__dirname, 'scoped-dir')], {autoDeleteCache: true})
