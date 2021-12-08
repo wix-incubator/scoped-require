@@ -1,6 +1,6 @@
 {
   "name": "scoped-require",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "Require that is scoped to directories",
   "homepage": "https://github.com/wix/scoped-require",
   "author": {
