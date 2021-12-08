@@ -21,12 +21,19 @@ module.exports = function generateRequireForUserCode (scopedDirs, options) {
   addPaths(baseModule)
 
   _.forEach(require.extensions, function (extensionLoader, extension) {
-    const original = extensionLoader
+    /*
+    Node.JS has 3 extensions: '.js', 'json' and 'node'. Each one has a loader which is a function.
+    There are tools, like jest, that add extensions (like .mjs) without a proper loader.
+    This `if` handles those cases, mostly for test environments.
+    */
+    if (_.isFunction(extensionLoader)) {
+      const original = extensionLoader
 
-    require.extensions[extension] = function requireThatAddsUserCodeDirs (m, filename) {
-      addPaths(m)
+      require.extensions[extension] = function requireThatAddsUserCodeDirs (m, filename) {
+        addPaths(m)
 
-      return original(m, filename)
+        return original(m, filename)
+      }
     }
   })
 
