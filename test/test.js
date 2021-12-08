@@ -1,4 +1,4 @@
-/* global describe, it */
+/* global describe, it, before, after */
 'use strict'
 const assert = require('assert')
 const scopedRequire = require('../')
@@ -239,5 +239,21 @@ describe('scoped-require node module', function () {
 
     const scopedModule = baseModule.require('scoped-test-module')
     assert.strictEqual(scopedModule.scopedFunction(), 'scoped dir 1')
+  })
+
+  describe('invalid require.extension loader', () => {
+    before(() => {
+      require.extensions['.foo'] = undefined
+    })
+
+    after(() => {
+      delete require.extensions['.foo']
+    })
+
+    it('ignores extensions without a function loader', () => {
+      const baseModule = scopedRequire([path.resolve(__dirname, 'invalid-extension')])
+
+      assert.doesNotThrow(() => baseModule.require('file.foo'))
+    })
   })
 })
