@@ -1,4 +1,4 @@
-/* global describe, it, before, after */
+/* global describe, it, before, after, beforeEach */
 'use strict'
 const assert = require('assert')
 const scopedRequire = require('../')
@@ -242,6 +242,13 @@ describe('scoped-require node module', function () {
   })
 
   describe('invalid require.extension loader', () => {
+    const dirPath = path.resolve(__dirname, 'invalid-extension')
+    const moduleId = path.join(dirPath, 'file.foo')
+
+    beforeEach(() => {
+      delete require.cache[moduleId]
+    })
+
     before(() => {
       require.extensions['.foo'] = undefined
     })
@@ -250,10 +257,16 @@ describe('scoped-require node module', function () {
       delete require.extensions['.foo']
     })
 
-    it('ignores extensions without a function loader', () => {
-      const baseModule = scopedRequire([path.resolve(__dirname, 'invalid-extension')])
+    it('ignores extensions without a function loader when ignoreInvalidExtensionLoaders is passed', () => {
+      const baseModule = scopedRequire([dirPath], { ignoreInvalidExtensionLoaders: true })
 
       assert.doesNotThrow(() => baseModule.require('file.foo'))
+    })
+
+    it('does not ignore extensions without a function loader when ignoreInvalidExtensionLoaders is not passed', () => {
+      const baseModule = scopedRequire([dirPath])
+
+      assert.throws(() => baseModule.require('file.foo'))
     })
   })
 })
